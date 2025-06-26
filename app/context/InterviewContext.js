@@ -1,20 +1,21 @@
-// for default data
-
-'use client';
-import { createContext, useContext, useState } from 'react';
+"use client";
+import { createContext, useContext, useState } from "react";
 
 const InterviewContext = createContext();
 
 export function InterviewProvider({ children }) {
-  const [interviewData, setInterviewData] = useState({
-    jobTitle: 'Behavioural Questions',
-    questions: [],
-    prepTime: 120,
-    recordTime: 180,
-  });
+  const [setupData, setSetupData] = useState(null);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
   return (
-    <InterviewContext.Provider value={{ interviewData, setInterviewData }}>
+    <InterviewContext.Provider
+      value={{
+        setupData,
+        setSetupData,
+        currentQuestionIndex,
+        setCurrentQuestionIndex,
+      }}
+    >
       {children}
     </InterviewContext.Provider>
   );
