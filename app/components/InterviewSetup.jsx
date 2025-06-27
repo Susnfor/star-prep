@@ -11,13 +11,18 @@ import { useRouter } from "next/navigation";
 import { useInterview } from "../context/InterviewContext";
 
 export default function InterviewSetup() {
+  // State to manage setup form visibility and loading state
   const [showForm, setShowForm] = useState(false);
   const [loading, setIsLoading] = useState(false);
+
+  // Router for navigation and context for interview data
   const router = useRouter();
   const { setSetupData } = useInterview();
 
+  // when button is clicked, basically submit form and fetch questions from API
   const handleSetupComplete = async (data) => {
     setIsLoading(true);
+    // try fetching questions from the API, if it fails, log the error
     try {
       const questions = await fetchQuestions(data.jobTitle, data.numQuestions);
 
@@ -26,6 +31,7 @@ export default function InterviewSetup() {
         return;
       }
 
+      // set setup data in context
       setSetupData({
         jobTitle: data.jobTitle,
         questions,
@@ -40,7 +46,7 @@ export default function InterviewSetup() {
         prepTime: data.prepTime,
         recordingTime: data.recordingTime,
       });
-
+      // Navigate to the interview page
       router.push("/interview");
     } catch (error) {
       console.error("Error during setup processing:", error);
@@ -76,7 +82,7 @@ export default function InterviewSetup() {
         >
           <Stack spacing={3} alignItems="center">
             <Typography variant="h4" align="center" fontWeight="bold">
-              Welcome to AI Interview Practice
+              Welcome to STAR Preparation
             </Typography>
             <Typography variant="body1" align="center">
               Practice behavioural interview questions in a timed,
