@@ -6,6 +6,7 @@ const InterviewContext = createContext();
 export function InterviewProvider({ children }) {
   const [setupData, setSetupData] = useState(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [feedback, setFeedback] = useState([]);
 
   return (
     <InterviewContext.Provider
@@ -14,6 +15,8 @@ export function InterviewProvider({ children }) {
         setSetupData,
         currentQuestionIndex,
         setCurrentQuestionIndex,
+        feedback,
+        setFeedback
       }}
     >
       {children}
