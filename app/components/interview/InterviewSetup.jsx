@@ -1,14 +1,14 @@
 "use client";
 import { useState, useEffect } from "react";
-import InterviewSetupForm from "./InterviewSetupForm";
-import fetchQuestions from "../lib/fetchQuestions";
+import InterviewSetupForm from "@/app/components/interview/InterviewSetupForm";
+import fetchQuestions from "@/app/lib/fetchQuestions";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import { useRouter } from "next/navigation";
-import { useInterview } from "../context/InterviewContext";
+import { useInterview } from "@/app/context/InterviewContext";
 
 export default function InterviewSetup() {
   // State to manage setup form visibility and loading state

@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { useInterview } from "../context/InterviewContext";
+import { useInterview } from "@/app/context/InterviewContext";
 
 export default function QuestionDisplay() {
     const { setupData, currentQuestionIndex, setCurrentQuestionIndex } = useInterview();
