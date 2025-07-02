@@ -2,7 +2,7 @@
 
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box"
-import QuestionSession from "../components/QuestionSession";
+import QuestionSession from "../components/session/QuestionSession";
 
 
 
