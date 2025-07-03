@@ -4,12 +4,10 @@ import { useState, useEffect, useRef } from "react";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import CountDownComponent from "@/app/components/ui/CountdownComponent";
 import { useInterview } from "@/app/context/InterviewContext";
 import QuestionDisplay from "@/app/components/ui/QuestionDisplay";
 import Grid from "@mui/material/Grid";
 import { DownloadVideos } from "@/app/lib/downloadVideos";
-import Button from "@mui/material/Button";
 import { useRouter } from "next/navigation";
 import InterviewComplete from "./InterviewComplete";
 import QuestionControls from "../ui/QuestionControls";
@@ -39,9 +37,9 @@ export default function QuestionSession() {
 	// This will be used to redirect users to the setup page if no questions are available
 	const router = useRouter();
 
-	const handleNoSession = () => {
-		router.push("/");
-	};
+
+
+	const handleNoSession = () =>  router.push("/");;
 
 
 	// Function to handle the end of preparation time
@@ -58,9 +56,9 @@ export default function QuestionSession() {
 	// This will be called when the recording countdown reaches zero
 	// or when the user clicks the "End Recording" button
 	const handleRecordingTimeEnd = () => {
-		setIsRecording(false);
 		if (recorderRef.current) {
 			recorderRef.current.stopRecording();
+            setIsRecording(false);
 		}
 	};
 	// Function to handle downloading the current recording
@@ -68,15 +66,12 @@ export default function QuestionSession() {
 	// It retrieves the current recording from the recorder reference and initiates the download
 	// It uses the DownloadVideos class to handle the download process
 	const handleRecordingDownload = () => {
-		if (recorderRef.current) {
-			// get the recording blob
-			const recording = recorderRef.current.getCurrentRecording(); //is {id, blob}
+        //get blob from recorderRef
+            const recording = recorderRef.current?.getCurrentRecording(); //is {id, blob}
 			if (recording) {
 				console.log("Recording saved:", recording);
 				// Download the video
-				let downloader = new DownloadVideos(recording);
-				downloader.downloadCurrentRecording(recording);
-			}
+				new DownloadVideos(recording).downloadCurrentRecording(recording);
 		}
 	};
 
@@ -90,8 +85,7 @@ export default function QuestionSession() {
 			if (allRecordings.length > 0) {
 				console.log("All recordings saved:", allRecordings);
 				// Download all videos
-				let downloader = new DownloadVideos(allRecordings);
-				downloader.downloadAllRecordings();
+				new DownloadVideos(allRecordings).downloadAllRecordings();
 			}
 		}
 	};
@@ -103,17 +97,13 @@ export default function QuestionSession() {
 	const handlePrepStart = () => {
 		setIsRecording(false);
 		setIsPrepTimeOver(false);
-		if (recorderRef.current) {
-			recorderRef.current.startWebcamFeed();
-		}
+		recorderRef.current?.startWebcamFeed();
 		setKeyTimer((prev) => prev + 1); // Reset timer by changing key
 	};
 
 	// Function to handle retaking the current question
 	// This will reset the recording state and start the preparation time again
-	const handleRetakeQuestion = () => {
-		handlePrepStart();
-	};
+	const handleRetakeQuestion = () => handlePrepStart();
 	// Function to handle moving to the next question
 	// This will reset the recording state, start the webcam feed, and prepare for the next question
 	// It also resets the preparation time to allow the user to prepare for the next question
@@ -121,9 +111,7 @@ export default function QuestionSession() {
 	const handleNextQuestion = () => {
 		setIsRecording(false);
 		setIsPrepTimeOver(false);
-		if (recorderRef.current) {
-			recorderRef.current.startWebcamFeed();
-		}
+		recorderRef.current?.startWebcamFeed();
 		setCurrentQuestionIndex((prev) => Math.min(prev + 1));
 		handlePrepStart();
 	};
@@ -131,9 +119,7 @@ export default function QuestionSession() {
 	const handleInterviewStartOver = () => {
 		setCurrentQuestionIndex(0);
 		router.push("/");
-		if (recorderRef.current) {
-			recorderRef.current.stopWebcamFeed();
-		}
+		recorderRef.current?.stopWebcamFeed();
 	};
 
 	const handleRedoQuestions = () => {
@@ -149,9 +135,22 @@ export default function QuestionSession() {
 	// This will show a message indicating that the interview is completed and provide options to start over
 	// or redo the interview, and download all recordings
 	// It also resets the current question index to allow starting over
-	if (currentQuestionIndex >= setupData.numQuestions) 
-		return <InterviewComplete onStartOver={handleInterviewStartOver} onRedo={handleRedoQuestions} onDownloadAll={handleRecordingDownloadAll} />
+
+    useEffect(() => {
+	if (currentQuestionIndex >= setupData.numQuestions) {
+		recorderRef.current?.stopWebcamFeed();
+	}
+}, [currentQuestionIndex, setupData.numQuestions, recorderRef]);
 	
+	if (currentQuestionIndex >= setupData.numQuestions) {
+		return (
+			<InterviewComplete
+				onStartOver={handleInterviewStartOver}
+				onRedo={handleRedoQuestions}
+				onDownloadAll={handleRecordingDownloadAll}
+			/>
+		);
+	}
 
 	return (
 		<Box
@@ -177,10 +176,6 @@ export default function QuestionSession() {
 					display: "flex",
 				}}
 			>
-
-                {currentQuestionIndex >= setupData.numQuestions ? 
-                <InterviewComplete onStartOver={handleInterviewStartOver} onRedo={handleRedoQuestions} onDownloadAll={handleRecordingDownloadAll} />
-                : 
 				<Grid container spacing={2}>
 					<Grid size={12}>
                         <TimerDisplay 
@@ -240,7 +235,6 @@ export default function QuestionSession() {
 						)}
 					</Grid>
 				</Grid>
-                }
 			</Paper>
 		</Box>
 	);
