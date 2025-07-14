@@ -14,15 +14,21 @@ import QuestionControls from "../ui/QuestionControls";
 import NoSession from "./NoSession";
 import RecordingActions from "../ui/RecordingActions";
 import TimerDisplay from "../ui/TimerDisplay";
+import { SpeechTranscriber } from "@/app/lib/SpeechTranscriber";
 
 export default function QuestionSession() {
 	// Reference to the video recorder instance
 	// This will be used to control recording and access recorded data
 	const recorderRef = useRef(null);
+
+	// Initialize the speech transcriber
+	const transcriberRef = useRef(null);
+
+	
+
 	// Access the interview context to get setup data and current question index
 	// This will allow us to manage the interview state and navigate through questions
-	// It also provides functions to update the current question index
-	const { setupData, currentQuestionIndex, setCurrentQuestionIndex } =
+	const { setupData, currentQuestionIndex, setCurrentQuestionIndex, recordedTranscript, setRecordedTranscript } =
 		useInterview();
 
 	// State to manage recording status and preparation time
@@ -38,9 +44,33 @@ export default function QuestionSession() {
 	const router = useRouter();
 
 
-
+	
+	// Function to handle the case when no session is available
 	const handleNoSession = () =>  router.push("/");;
 
+	// Function to handle starting the preparation time
+	// This will reset the recording state and start the webcam feed
+	// It also resets the key timer to force the countdown components to re-render
+	// This is called when the user clicks the "Next Question" or "Retake Question" buttons
+	const handlePrepStart = () => {
+		setIsRecording(false);
+		setIsPrepTimeOver(false);
+		recorderRef.current?.startWebcamFeed();
+		
+		// Clean up existing transcriber before creating new one
+		if (transcriberRef.current) {
+			try {
+				transcriberRef.current.stop();
+			} catch (error) {
+				console.log("Cleanup transcriber error (expected):", error);
+			}
+		}
+		
+		// Initialise new transcriber
+		transcriberRef.current = new SpeechTranscriber();
+		
+		setKeyTimer((prev) => prev + 1); // Reset timer by changing key
+	};
 
 	// Function to handle the end of preparation time
 	// This will be called when the preparation countdown reaches zero
@@ -50,6 +80,42 @@ export default function QuestionSession() {
 		if (recorderRef.current) {
 			recorderRef.current.startRecording();
 			setIsRecording(true);
+			
+			// // Ensure transcriber is initialized and set up callbacks
+			// if (!transcriberRef.current) {
+			// 	console.log("Creating transcriber in handlePrepTimeEnd");
+			// 	transcriberRef.current = new SpeechTranscriber();
+			// }
+			
+			if (transcriberRef.current && transcriberRef.current.supported) {
+				console.log("Setting up transcriber for question:", currentQuestionIndex);
+				
+				transcriberRef.current.onTranscription = (text) => {
+					console.log("Live transcript received:", text);
+					const questionText = setupData?.questions?.[currentQuestionIndex];
+					if (questionText) {
+						setRecordedTranscript((prev) => ({
+							...prev,
+							[questionText]: text,
+						}));
+					}
+				};
+				
+				transcriberRef.current.onError = (error) => {
+					if (error !== 'aborted') {
+						console.error("Transcription error:", error);
+					}
+				};
+				
+				// Start transcription
+				transcriberRef.current.start().catch((error) => {
+					if (error !== 'aborted') {
+						console.error("Failed to start transcription:", error);
+					}
+				});
+			} else {
+				console.warn("Transcriber not supported or not initialized");
+			}
 		}
 	};
 	// Function to handle the end of recording time
@@ -58,7 +124,25 @@ export default function QuestionSession() {
 	const handleRecordingTimeEnd = () => {
 		if (recorderRef.current) {
 			recorderRef.current.stopRecording();
-            setIsRecording(false);
+			setIsRecording(false);
+			
+			// Stop transcription and get final transcript
+			if (transcriberRef.current) {
+				transcriberRef.current.stop().then((finalTranscript) => {
+					const questionText = setupData?.questions?.[currentQuestionIndex];
+					if (questionText && finalTranscript && finalTranscript.trim()) {
+						setRecordedTranscript((prev) => ({
+							...prev,
+							[questionText]: finalTranscript,
+						}));
+						console.log("Final transcript for question", currentQuestionIndex, ":", finalTranscript);
+					}
+				}).catch((error) => {
+					if (error !== 'aborted') {
+						console.error("Error stopping transcription:", error);
+					}
+				});
+			}
 		}
 	};
 	// Function to handle downloading the current recording
@@ -90,16 +174,7 @@ export default function QuestionSession() {
 		}
 	};
 
-	// Function to handle starting the preparation time
-	// This will reset the recording state and start the webcam feed
-	// It also resets the key timer to force the countdown components to re-render
-	// This is called when the user clicks the "Next Question" or "Retake Question" buttons
-	const handlePrepStart = () => {
-		setIsRecording(false);
-		setIsPrepTimeOver(false);
-		recorderRef.current?.startWebcamFeed();
-		setKeyTimer((prev) => prev + 1); // Reset timer by changing key
-	};
+
 
 	// Function to handle retaking the current question
 	// This will reset the recording state and start the preparation time again
@@ -136,11 +211,40 @@ export default function QuestionSession() {
 	// or redo the interview, and download all recordings
 	// It also resets the current question index to allow starting over
 
+		// Initialize transcriber on component mount for the first question
+	useEffect(() => {
+		if (!transcriberRef.current) {
+			console.log("Initializing transcriber for first question");
+			transcriberRef.current = new SpeechTranscriber();
+		}
+	}, []);
+
     useEffect(() => {
 	if (currentQuestionIndex >= setupData.numQuestions) {
 		recorderRef.current?.stopWebcamFeed();
 	}
 }, [currentQuestionIndex, setupData.numQuestions, recorderRef]);
+
+	// Initialize transcriber on component mount for the first question
+	useEffect(() => {
+		if (!transcriberRef.current) {
+			console.log("Initializing transcriber for first question");
+			transcriberRef.current = new SpeechTranscriber();
+		}
+	}, []);
+
+	// Cleanup transcriber on component unmount
+	useEffect(() => {
+		return () => {
+			if (transcriberRef.current) {
+				try {
+					transcriberRef.current.stop();
+				} catch (error) {
+					// Ignore cleanup errors
+				}
+			}
+		};
+	}, []);
 	
 	if (currentQuestionIndex >= setupData.numQuestions) {
 		return (
@@ -148,6 +252,7 @@ export default function QuestionSession() {
 				onStartOver={handleInterviewStartOver}
 				onRedo={handleRedoQuestions}
 				onDownloadAll={handleRecordingDownloadAll}
+				onFeedback={() => router.push("/summary")} // to the summary page for feedback
 			/>
 		);
 	}
@@ -229,10 +334,24 @@ export default function QuestionSession() {
 							recorderRef={recorderRef}
 						/>
 						{isRecording && (
-							<Typography variant="body2" color="error" sx={{ mt: 1 }}>
-								🔴 Recording...
-							</Typography>
+							<Box>
+								<Typography variant="body2" color="error" sx={{ mt: 1 }}>
+									🔴 Recording...
+								</Typography>
+								<Paper sx={{ p: 2, mt: 2, backgroundColor: '#f5f5f5' }}>
+									<Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+										Live Transcript:
+									</Typography>
+									<Typography variant="body2" sx={{ minHeight: '40px', textAlign: 'left' }}>
+										{recordedTranscript[setupData?.questions?.[currentQuestionIndex]] || 'Speak to see transcript...'}
+									</Typography>
+									<Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
+										Debug: Q{currentQuestionIndex}: {setupData?.questions?.[currentQuestionIndex]?.substring(0, 30)}...
+									</Typography>
+								</Paper>
+							</Box>
 						)}
+						
 					</Grid>
 				</Grid>
 			</Paper>
