@@ -7,6 +7,7 @@ export function InterviewProvider({ children }) {
   const [setupData, setSetupData] = useState(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [feedback, setFeedback] = useState([]);
+  const [recordedTranscript, setRecordedTranscript] = useState([]);
 
   return (
     <InterviewContext.Provider
@@ -16,7 +17,9 @@ export function InterviewProvider({ children }) {
         currentQuestionIndex,
         setCurrentQuestionIndex,
         feedback,
-        setFeedback
+        setFeedback,
+        recordedTranscript,
+        setRecordedTranscript
       }}
     >
       {children}
