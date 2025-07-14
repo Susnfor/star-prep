@@ -44,6 +44,43 @@ class userFeedback {
         return data.candidates[0].content.parts[0].text;
     }
 
+    // Parser method to feedback 
+	parseFeedback(rawFeedback) {
+		const lines = rawFeedback.split('\n').map(line => line.trim()).filter(Boolean);
+		const feedback = {
+			overallFeedback: '',
+			positiveHighlight: '',
+			starSuggestion: '',
+			fillerWords: '',
+			score: '',
+		};
+
+		let currentKey = null;
+
+		lines.forEach(line => {
+			if (line.startsWith('**1. Overall Feedback:**')) {
+				currentKey = 'overallFeedback';
+				feedback[currentKey] = line.replace('**1. Overall Feedback:**', '').trim();
+			} else if (line.startsWith('**2. Positive Highlight:**')) {
+				currentKey = 'positiveHighlight';
+				feedback[currentKey] = line.replace('**2. Positive Highlight:**', '').trim();
+			} else if (line.startsWith('**3. STAR Suggestion:**')) {
+				currentKey = 'starSuggestion';
+				feedback[currentKey] = line.replace('**3. STAR Suggestion:**', '').trim();
+			} else if (line.startsWith('**4. Filler Words:**')) {
+				currentKey = 'fillerWords';
+				feedback[currentKey] = line.replace('**4. Filler Words:**', '').trim();
+			} else if (line.startsWith('**5. Score:**')) {
+				currentKey = 'score';
+				feedback[currentKey] = line.replace('**5. Score:**', '').trim();
+			} else if (currentKey) {
+				feedback[currentKey] += ' ' + line;
+			}
+		});
+
+		return feedback;
+	}
+
 }
 
 // The POST API route handler
@@ -57,10 +94,12 @@ export async function POST(req) {
     try {
        
         const prompt = feedbackGenerator.buildPrompt(transcribedText, question);
-        const feedback = await feedbackGenerator.generateFeedback(prompt);
-        return new Response(JSON.stringify({ feedback }), { status: 200 });
+        const rawFeedback = await feedbackGenerator.generateFeedback(prompt);
+        const structuredFeedback = feedbackGenerator.parseFeedback(rawFeedback);
+
+        return new Response(JSON.stringify({ feedback: structuredFeedback }), { status: 200 });
     } catch (error) {
         console.error('Error generating feedback:', error);
-        return new Response({message: error}, { status: 500 });
+        return new Response(JSON.stringify({message: error.message}), { status: 500 });
     }
 }
