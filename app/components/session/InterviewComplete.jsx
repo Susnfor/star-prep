@@ -6,6 +6,7 @@ export default function InterviewComplete({
 	onStartOver,
 	onRedo,
 	onDownloadAll,
+	onFeedback,
 }) {
 	return (
 
@@ -19,6 +20,9 @@ export default function InterviewComplete({
 					</Button>
 					<Button onClick={onDownloadAll} sx={{ mx: 1 }}>
 						Download All
+					</Button>
+					<Button onClick={onFeedback} sx={{ mx: 1 }}>
+						View Feedback
 					</Button>
 				</Box>
 	);
