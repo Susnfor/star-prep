@@ -10,26 +10,13 @@ import QuestionSummaryCard from "../components/summary/QuestionSummaryCard";
 
 export default function SummaryPage() {
 	const { recordedTranscript, setRecordedTranscript, setupData } = useInterview();
-	const questions = setupData?.questions || [
-		 "Tell me about yourself and your background.",
-        "What is your greatest strength and how have you used it in a professional setting?",
-        "Describe a challenging situation you faced at work and how you handled it.",
-        "Where do you see yourself in five years?",
-        "Why are you interested in this position and our company?"
-	];
+	const questions = setupData?.questions || [];
 	console.log("Recorded transcript:", recordedTranscript);
-console.log("Setup questions:", questions);
+	console.log("Setup questions:", questions);
 
-if (recordedTranscript === null || recordedTranscript === undefined) {
-	setRecordedTranscript({
-		
-	})
-}
 
 	return (
-		<Box sx={{ p: 4,     minHeight: "100vh",
-        width: "100%",
-}}>
+		<Box sx={{ p: 4, minHeight: "100vh", width: "100%"}}>
 			<Typography variant="h4" gutterBottom align="center" fontWeight="bold">
 				Interview Summary
 			</Typography>
@@ -39,10 +26,10 @@ if (recordedTranscript === null || recordedTranscript === undefined) {
 				return (
 					<Paper key={index} sx={{ p: 3, my: 3 }}>
 						<QuestionSummaryCard
-              			question={question}
-              			transcript={transcript}
-			  		questionIndex={index}
-            />
+        					question={question}
+        					transcript={transcript}
+							questionIndex={index}
+            			/>
 					</Paper>
 				);
 			}): <><p>No questions</p></>}
