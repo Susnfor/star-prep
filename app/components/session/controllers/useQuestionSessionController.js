@@ -1,6 +1,6 @@
 'use client';
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useInterview } from "@/app/context/InterviewContext";
 import { useRecording } from "../hooks/useRecording";
 import { useTranscription } from "../hooks/useTranscription";
@@ -68,11 +68,11 @@ export function useQuestionSessionController() {
 
     // handle finishing the session
     // this will stop the webcam feed, stop the recording and transcription
-    const handleFinishSession = () => {
+    const handleFinishSession = useCallback(() => {
         recording.stopWebcamFeed();
         recording.stopRecording();
         transcription.stopTranscription();
-    };
+    }, [recording, transcription]);
 
     // handle downloading the current recording
     // this will download the current recording for the current question
@@ -113,7 +113,7 @@ export function useQuestionSessionController() {
     if (!transcription.transcriberRef.current) {
         transcription.initialiseTranscriber();
     }
-}, []);
+}, [transcription]);
 
 // Cleanup function to stop the transcriber when the component unmounts
     useEffect(() => {
@@ -126,14 +126,14 @@ export function useQuestionSessionController() {
                 }
             }
         };
-    }, []);
+    }, [transcription]);
 
     //handle completion of the session
     useEffect(() => {
         if (setupData && currentQuestionIndex >= setupData.numQuestions) {
             handleFinishSession(); 
         }
-    }, [currentQuestionIndex, setupData?.numQuestions]);
+    }, [currentQuestionIndex, setupData, handleFinishSession]);
     
 
 
