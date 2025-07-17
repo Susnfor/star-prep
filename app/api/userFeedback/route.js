@@ -6,15 +6,14 @@ class userFeedback {
     // Builds the prompt based on the transcribed text
     buildPrompt(transcribedText, question) {
         return `You are an expert interview coach.
-
         Evaluate the following response to an interview question.
         Please give:
             1. Overall Feedback: One sentence of overall feedback.
             2. Positive Highlight: Mention one thing the candidate did well.
-            3. STAR Suggestion:A suggestion for improvement using the STAR format.
+            3. STAR Suggestion: A suggestion for improvement using the STAR format. Split this section using bullet points.
             4. Filler Words: How many filler words (like "um", "uh", "like") were used.
             5. Score: A score from 1 to 10 for the overall quality of the response.
-                Use English UK spelling and grammar throughout. Be constructive and encouraging in your tone. Label each section clearly as shown above.
+        Use English UK spelling and grammar throughout. Be constructive and encouraging in your tone. Label each section clearly as shown above.
         The response is: "${transcribedText}" and the question is: "${question}". `;
     }
 
@@ -77,6 +76,8 @@ class userFeedback {
 				feedback[currentKey] += ' ' + line;
 			}
 		});
+
+        
 
 		return feedback;
 	}
