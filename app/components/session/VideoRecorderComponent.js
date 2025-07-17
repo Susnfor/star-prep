@@ -1,10 +1,12 @@
 //display webcam feed and record video
 'use client';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 
 import { useEffect, useRef } from 'react';
 import { VideoRecorder } from '@/app/lib/VideoRecorder';
 
-export default function VideoRecorderComponent({recorderRef}) {
+export default function VideoRecorderComponent({recorderRef, isRecording, isPrepTimeOver, setIsPrepTimeOver, setIsRecording, onRecorderReady}) {
   const videoRef = useRef(null);
 
 
@@ -12,17 +14,30 @@ export default function VideoRecorderComponent({recorderRef}) {
   useEffect(() => {
     if (videoRef.current && recorderRef.current === null) {
       recorderRef.current = new VideoRecorder(videoRef.current);
-      recorderRef.current.startWebcamFeed();
+      onRecorderReady(recorderRef.current);
     }
-  }, [recorderRef]);
+  }, [recorderRef, onRecorderReady]);
 
   return (
-    <video
+    <Box>
+      {isRecording && (
+      <Typography variant="body2" color="error" sx={{ mt: 1 }}>
+        🔴 REC
+      </Typography>
+    )}
+    { !isPrepTimeOver && (
+      <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+        📹 PREP
+      </Typography>
+    )}
+      <video
       ref={videoRef}
       autoPlay
       muted
       playsInline
       className="w-full h-auto max-w-3xl bg-black rounded"
     />
+  </Box>
+
   );
 }

@@ -124,13 +124,11 @@ export default function QuestionSession() {
 							setIsRecording={controller.setIsRecording}
 							isPrepTimeOver={controller.isPrepTimeOver}
 							setIsPrepTimeOver={controller.setIsPrepTimeOver}
+							onRecorderReady={controller.handleRecorderReady}
 							recorderRef={controller.recorderRef}
 						/>
 						{controller.isRecording && (
 							<Box>
-								<Typography variant="body2" color="error" sx={{ mt: 1 }}>
-									🔴 Recording...
-								</Typography>
 								<Paper sx={{ p: 2, mt: 2, backgroundColor: '#f5f5f5' }}>
 									<Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
 										Live Transcript:

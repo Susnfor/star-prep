@@ -13,11 +13,15 @@ export function useQuestionSessionController() {
     const [keyTimer, setKeyTimer] = useState(0);
     const router = useRouter()
 
+    const handleRecorderReady = (recorder) => {
+        console.log("VideoRecorder initialised");
+        recorder.startWebcamFeed(); 
+    };
+
     // start prep time and intialise transcription
     // this will be called when the user clicks on the start button
     // it will start the webcam feed
     const handlePrepStart = () => {
-        recording.startWebcamFeed();
         recording.startPrepTime();
         transcription.initialiseTranscriber();
         setKeyTimer(prev => prev + 1);
@@ -143,6 +147,7 @@ export function useQuestionSessionController() {
         setCurrentQuestionIndex,
         
         // Actions
+        handleRecorderReady,
         handlePrepStart,
         handlePrepTimeEnd,
         handleRecordingTimeEnd,
