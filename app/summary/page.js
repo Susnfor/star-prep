@@ -5,13 +5,26 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Divider from "@mui/material/Divider";
+import QuestionSummaryCard from "../components/summary/QuestionSummaryCard";
 // import CircularProgress from "@mui/material/CircularProgress";
 
 export default function SummaryPage() {
-	const { recordedTranscript, setupData } = useInterview();
-	const questions = setupData?.questions || [];
+	const { recordedTranscript, setRecordedTranscript, setupData } = useInterview();
+	const questions = setupData?.questions || [
+		 "Tell me about yourself and your background.",
+        "What is your greatest strength and how have you used it in a professional setting?",
+        "Describe a challenging situation you faced at work and how you handled it.",
+        "Where do you see yourself in five years?",
+        "Why are you interested in this position and our company?"
+	];
 	console.log("Recorded transcript:", recordedTranscript);
 console.log("Setup questions:", questions);
+
+if (recordedTranscript === null || recordedTranscript === undefined) {
+	setRecordedTranscript({
+		
+	})
+}
 
 	return (
 		<Box sx={{ p: 4,     minHeight: "100vh",
@@ -25,27 +38,11 @@ console.log("Setup questions:", questions);
 				const transcript = recordedTranscript[question];
 				return (
 					<Paper key={index} sx={{ p: 3, my: 3 }}>
-						<Typography variant="h5" fontWeight="bold"gutterBottom>
-							Question {index + 1}
-						</Typography>
-						<Typography variant="subtitle1" gutterBottom fontStyle="italic">
-							{question}
-						</Typography>
-						<Divider sx={{ my: 2 }} />
-						<Typography  variant="h6">Your Answer:</Typography>
-						<Typography sx={{ mt: 1, whiteSpace: "pre-wrap" }}>
-							{transcript || "No response recorded."}
-						</Typography>
-						
-        {transcript && 
-          <>
-            <Typography  sx={{ mb: 1, mt: 2}} variant="h6"> Feedback: </Typography>
-            <FeedbackComponent
-              transcribedText={transcript}
-              question={question}
+						<QuestionSummaryCard
+              			question={question}
+              			transcript={transcript}
+			  		questionIndex={index}
             />
-          </>
-        }
 					</Paper>
 				);
 			}): <><p>No questions</p></>}
