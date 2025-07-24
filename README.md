@@ -4,6 +4,25 @@ A realistic interview simulation platform that helps you practise behavioural in
 
 **Live Demo:** [Demo](https://star-prep.vercel.app/)
 
+## Screenshots
+
+See below for examples of Star Prep in action:
+
+![Setup Screen](https://github.com/user-attachments/assets/8c842fd6-216e-4dba-90f9-152e21de67ee)
+*Setup screen: Select job type and configure timing preferences.*
+
+![Recording Interface](https://github.com/user-attachments/assets/db5048e0-3826-4691-83df-822a896f48a0)
+*Recording interface: Live interview simulation with webcam and timer.*
+
+![Summary Page](https://github.com/user-attachments/assets/50c591f5-2a9b-4323-9b4b-8f94b2537d9c)
+*Summary page: Complete overview of interview performance.*
+
+![AI Feedback Analysis](https://github.com/user-attachments/assets/3d39fb96-23b4-4c5f-a7cd-d8ffa7de4122)
+*AI feedback analysis: Detailed response evaluation and improvement suggestions.*
+
+![AI Feedback Details](https://github.com/user-attachments/assets/c7e6f547-50c1-4757-97ab-dc19399c396c)
+*AI feedback details: STAR method analysis and performance metrics.*
+
 ## What It Does
 
 Star Prep simulates real interview conditions by recording your responses to behavioural questions and providing AI-generated feedback. You get timed preparation periods, video recording with webcam feed, and detailed analysis of your answers using the STAR method framework.
