@@ -36,86 +36,130 @@ export default function InterviewSetupForm({ onSetupComplete, isLoading }) {
     };
     
   return (
-    <Box
+    <Paper
+      elevation={2}
       sx={{
-        minHeight: '100vh',
-        width: '100%',
-        bgcolor: 'background.default',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        px: 2,
+        p: 5,
+        borderRadius: 3,
+        bgcolor: "background.paper",
+        border: "1px solid",
+        borderColor: "grey.200",
+        maxWidth: "600px",
+        width: "100%",
       }}
     >
-      <Paper elevation={4}  sx={{
-    p: 4,
-    width: '100%',
-    maxWidth: 500,
-    minWidth: 320,
-    mx: 'auto',
-    textAlign: 'center',
-    borderRadius: 3,
-  }}>
-        <Typography variant="h5" align="center" gutterBottom>
-          Interview Setup
-        </Typography>
+      <Typography variant="h4" sx={{ fontWeight: 600, color: "text.primary", mb: 1, textAlign: "center" }}>
+        Interview Setup
+      </Typography>
+      
+      <Typography variant="body1" sx={{ color: "text.secondary", mb: 4, textAlign: "center" }}>
+        Configure your interview session preferences
+      </Typography>
 
-        <Box component="form" onSubmit={handleSubmit} noValidate>
-          <Stack spacing={3}>
-            <TextField
-              label="Job Title / Question Type"
-              value={jobTitle}
-              onChange={(e) => setJobTitle(e.target.value)}
-              fullWidth
+      <Box component="form" onSubmit={handleSubmit} noValidate>
+        <Stack spacing={4}>
+          <TextField
+            label="Job Title / Question Type"
+            value={jobTitle}
+            onChange={(e) => setJobTitle(e.target.value)}
+            fullWidth
+            variant="outlined"
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 2,
+              }
+            }}
+          />
+
+          <Box>
+            <Typography variant="h6" sx={{ mb: 1, fontWeight: 500 }}>
+              Number of Questions
+            </Typography>
+            <Typography variant="body2" sx={{ color: "text.secondary", mb: 2 }}>
+              Current selection: {numQuestions} questions
+            </Typography>
+            <Slider
+              value={numQuestions}
+              onChange={(e, val) => setNumQuestions(val)}
+              step={1}
+              min={1}
+              max={10}
+              valueLabelDisplay="auto"
+              sx={{
+                '& .MuiSlider-thumb': {
+                  borderRadius: 2,
+                },
+                '& .MuiSlider-track': {
+                  borderRadius: 2,
+                },
+              }}
             />
+          </Box>
 
-            <Box>
-              <Typography gutterBottom>
-                Number of Questions: {numQuestions}
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3}>
+            <Box sx={{ flex: 1 }}>
+              <Typography variant="body2" sx={{ mb: 1, fontWeight: 500 }}>
+                Preparation Time
               </Typography>
-              <Slider
-                value={numQuestions}
-                onChange={(e, val) => setNumQuestions(val)}
-                step={1}
-                min={1}
-                max={10}
-                valueLabelDisplay="auto"
-              />
-            </Box>
-
-            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
               <TextField
-                label="Preparation Time (seconds)"
+                label="Seconds"
                 type="number"
                 value={prepTime}
                 onChange={(e) => setPrepTime(e.target.value)}
                 fullWidth
+                variant="outlined"
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: 2,
+                  }
+                }}
               />
+            </Box>
+            <Box sx={{ flex: 1 }}>
+              <Typography variant="body2" sx={{ mb: 1, fontWeight: 500 }}>
+                Recording Time
+              </Typography>
               <TextField
-                label="Recording Time (seconds)"
+                label="Seconds"
                 type="number"
                 value={recordingTime}
                 onChange={(e) => setRecordingTime(e.target.value)}
                 fullWidth
+                variant="outlined"
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: 2,
+                  }
+                }}
               />
-            </Stack>
-
-            <Button
-              type="submit"
-              variant="contained"
-              size="large"
-              fullWidth
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <CircularProgress size={24} color="inherit" />
-              ) : (
-                'Start Interview'
-              )}
-            </Button>
+            </Box>
           </Stack>
-        </Box>
-      </Paper>
-    </Box>
+
+          <Button
+            type="submit"
+            variant="contained"
+            size="large"
+            fullWidth
+            disabled={isLoading}
+            sx={{ 
+              py: 1.5,
+              borderRadius: 2,
+              fontWeight: 600,
+              fontSize: "1.1rem",
+              mt: 3,
+            }}
+          >
+            {isLoading ? (
+              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                <CircularProgress size={24} color="inherit" />
+                <span>Setting up your interview...</span>
+              </Box>
+            ) : (
+              'Start Interview'
+            )}
+          </Button>
+        </Stack>
+      </Box>
+    </Paper>
   );
 }

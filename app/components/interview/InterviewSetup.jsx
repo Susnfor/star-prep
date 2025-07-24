@@ -5,12 +5,11 @@ import fetchQuestions from "@/app/lib/fetchQuestions";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
-import Box from "@mui/material/Box";
 import { useRouter } from "next/navigation";
 import { useInterview } from "@/app/context/InterviewContext";
 import { QuestionGenerator } from "@/app/lib/generateFallbackQuestions";
 import JobSelector from "@/app/components/selector/jobSelector";
+import AppLayout from "@/app/components/ui/AppLayout";
 
 export default function InterviewSetup() {
   // State to manage setup form visibility and loading state
@@ -86,47 +85,52 @@ export default function InterviewSetup() {
 };
 
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        width: "100%",
-        bgcolor: "background.default",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
+    <AppLayout
+      subtitle="Interview Practice Setup"
+      rightText="Setup"
+      rightColor="text.secondary"
     >
       {!showForm ? (
         <Paper
-          elevation={4}
+          elevation={2}
           sx={{
-            width: "100%",
-            maxWidth: 600,
-            p: 4,
-            bgcolor: "background.default",
+            p: 6,
             borderRadius: 3,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
+            bgcolor: "background.paper",
+            border: "1px solid",
+            borderColor: "grey.200",
+            textAlign: "center",
+            maxWidth: "600px",
+            width: "100%",
           }}
         >
-          <Stack spacing={3} alignItems="center">
-            <Typography variant="h4" align="center" fontWeight="bold">
-              Welcome to STAR Preparation
-            </Typography>
-            <Typography variant="body1" align="center">
-              Practice behavioural interview questions in a timed,
-              video-recorded format. Set your preferences and prepare just like
-              a real HireVue-style interview.
-            </Typography>
-            <Button
-              variant="contained"
-              size="large"
-              onClick={() => setShowForm(true)}
-            >
-              Continue
-            </Button>
-          </Stack>
+          <Typography variant="h4" sx={{ fontWeight: 600, color: "text.primary", mb: 3 }}>
+            Welcome to STAR Preparation
+          </Typography>
+          
+          <Typography variant="h6" sx={{ color: "text.secondary", mb: 4 }}>
+            Practice behavioural interview questions in a timed, video-recorded format.
+          </Typography>
+
+          <Typography variant="body1" sx={{ color: "text.secondary", mb: 5 }}>
+            Set your preferences and prepare just like a real HireVue-style interview. 
+            This platform will help you build confidence and improve your interview performance.
+          </Typography>
+
+          <Button
+            variant="contained"
+            size="large"
+            onClick={() => setShowForm(true)}
+            sx={{ 
+              py: 1.5,
+              px: 4,
+              borderRadius: 2,
+              fontWeight: 600,
+              fontSize: "1.1rem",
+            }}
+          >
+            Get Started
+          </Button>
         </Paper>
       ) : (
         <InterviewSetupForm
@@ -134,12 +138,13 @@ export default function InterviewSetup() {
           isLoading={loading}
         />
       )}
+
       <JobSelector
-    open={showJobSelector}
-    onClose={() => setShowJobSelector(false)}
-    onSelect={handleFallbackJobSelect}
-    numQuestions={currentSetupData?.numQuestions || 5}
-/>
-    </Box>
+        open={showJobSelector}
+        onClose={() => setShowJobSelector(false)}
+        onSelect={handleFallbackJobSelect}
+        numQuestions={currentSetupData?.numQuestions || 5}
+      />
+    </AppLayout>
   );
 }
