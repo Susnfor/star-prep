@@ -93,15 +93,50 @@ export default function JobSelector({ open, onClose, onSelect, numQuestions }) {
             fullWidth
             PaperProps={{
                 sx: {
-                    borderRadius: 3,
-                    p: 1
+                    borderRadius: 4,
+                    p: 0,
+                    height: "90vh",
+                    maxHeight: "900px",
+                    background: "linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)",
+                    boxShadow: "0 20px 40px rgba(0,0,0,0.1)",
                 }
             }}
         >
-            <DialogTitle>
-                <Box textAlign="center" sx={{ py: 2 }}>
-                    <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', color: 'primary.main' }}>
-                        🤖 AI Service Temporarily Unavailable
+            <DialogTitle sx={{ p: 0 }}>
+                {/* Header */}
+                <Box 
+                    sx={{ 
+                        px: 3,
+                        py: 1.5,
+                        borderBottom: "1px solid",
+                        borderColor: "grey.200",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                    }}
+                >
+                    {/* Left side - App title */}
+                    <Box>
+                        <Typography variant="h5" component="h1" sx={{ fontWeight: 600, color: "primary.main", mb: 0.5 }}>
+                            Star Prep
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                            Choose Your Interview Focus
+                        </Typography>
+                    </Box>
+
+                    {/* Right side - AI status */}
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                        <Typography variant="body2" sx={{ color: "warning.main", fontWeight: 600 }}>
+                            🤖 AI Temporarily Unavailable
+                        </Typography>
+                    </Box>
+                </Box>
+
+                {/* Main title */}
+                <Box textAlign="center" sx={{ py: 3, px: 3 }}>
+                    <Typography variant="h4" gutterBottom sx={{ fontWeight: 600, color: 'text.primary', mb: 2 }}>
+                        Select Your Interview Type
                     </Typography>
                     <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 600, mx: 'auto' }}>
                         Choose from our expertly curated question sets while we wait for the AI to recover
@@ -109,7 +144,7 @@ export default function JobSelector({ open, onClose, onSelect, numQuestions }) {
                 </Box>
             </DialogTitle>
             
-            <DialogContent sx={{ px: 4, py: 2 }}>
+            <DialogContent sx={{ px: 4, py: 2, flex: 1, overflow: "auto" }}>
                 <Grid container spacing={3} justifyContent="center">
                     {PREDEFINED_JOBS.map((job) => (
                         <Grid item xs={12} sm={6} lg={3} key={job.title}>
@@ -124,11 +159,12 @@ export default function JobSelector({ open, onClose, onSelect, numQuestions }) {
                                     borderColor: selectedJob?.title === job.title ? job.color : 'divider',
                                     backgroundColor: selectedJob?.title === job.title ? `${job.color}08` : 'background.paper',
                                     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                                    borderRadius: 3,
                                     '&:hover': {
                                         borderColor: job.color,
                                         backgroundColor: `${job.color}08`,
-                                        transform: 'translateY(-8px)',
-                                        boxShadow: `0 12px 24px ${job.color}20`
+                                        transform: 'translateY(-4px)',
+                                        boxShadow: `0 8px 16px ${job.color}20`
                                     }
                                 }}
                                 onClick={() => handleJobSelect(job)}
@@ -210,12 +246,12 @@ export default function JobSelector({ open, onClose, onSelect, numQuestions }) {
                 </Grid>
             </DialogContent>
             
-            <DialogActions sx={{ px: 4, py: 3, justifyContent: 'space-between' }}>
+            <DialogActions sx={{ px: 4, py: 3, justifyContent: 'space-between', borderTop: "1px solid", borderColor: "grey.200" }}>
                 <Button 
                     onClick={handleClose} 
                     color="secondary"
                     size="large"
-                    sx={{ px: 3 }}
+                    sx={{ px: 3, py: 1.5, borderRadius: 2 }}
                 >
                     Cancel
                 </Button>
@@ -227,9 +263,14 @@ export default function JobSelector({ open, onClose, onSelect, numQuestions }) {
                     sx={{ 
                         px: 4,
                         py: 1.5,
+                        borderRadius: 2,
+                        fontWeight: 600,
                         backgroundColor: selectedJob?.color || 'primary.main',
                         '&:hover': {
                             backgroundColor: selectedJob?.color ? `${selectedJob.color}dd` : 'primary.dark'
+                        },
+                        '&:disabled': {
+                            backgroundColor: 'grey.300'
                         }
                     }}
                 >
