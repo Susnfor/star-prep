@@ -39,8 +39,9 @@ Key features:
 ## Tech Stack
 
 **Frontend:** Next.js 14, React 18, Material-UI 5  
+**Backend:** Next.js API Routes (full-stack without database by design)  
 **Recording:** WebRTC MediaRecorder API, Web Speech API  
-**AI:** Google Gemini API for response analysis  
+**AI:** Google Gemini API with secure server-side integration  
 **Deployment:** Vercel with automatic deployments
 
 ## Getting Started
@@ -92,6 +93,14 @@ The app guides you through a complete interview simulation:
 
 All recordings remain completely local for privacy - nothing is stored on external servers.
 
+## Architecture & Design Philosophy
+
+**Privacy-First Approach:** Star Prep intentionally operates without user accounts or data persistence. While this means we can't track long-term progress or improvement metrics, it ensures complete user privacy and builds trust - especially important when users are sharing personal interview responses.
+
+**Video Download Feature:** Since no data is stored, the video download functionality ensures users can still take something valuable away from each session. They can review their responses later, share them with mentors, or build their own personal improvement tracking system.
+
+**Trade-offs:** This architecture puts user privacy and trust over features like progress tracking or personalised recommendations. For an interview practice platform handling sensitive personal content, this felt like the right balance.
+
 ## Technical Implementation
 
 ### Video Recording System
@@ -101,7 +110,7 @@ Built a custom VideoRecorder class that handles MediaRecorder lifecycle, stream 
 Uses React Context with custom hooks (useRecording, useTranscription) to manage complex interview session state. The controller pattern centralises all session logic and actions.
 
 ### AI Integration
-Integrates with Google Gemini API to analyze interview responses. The system evaluates STAR method usage, detects filler words, and provides constructive feedback for improvement.
+Built as a full-stack application with two separate API routes for better code organisation and maintainability. The `/api/generateQuestions` and `/api/userFeedback` endpoints handle different aspects of AI communication, keeping the Gemini API key secure on the server side. Intentionally designed without a database to ensure complete user privacy - no personal data or recordings are ever stored.
 
 ## Challenges & Solutions
 
@@ -128,6 +137,8 @@ app/
 ├── context/             # React state management
 ├── lib/                 # Core utilities and classes
 └── api/                 # Backend API routes
+    ├── generateQuestions/    # AI question generation endpoint
+    └── userFeedback/         # AI feedback analysis endpoint
 ```
 
 ## Future Enhancements
