@@ -33,7 +33,7 @@ class QuestionGenerator {
     if (!response.ok) {
       const errorData = await response.json();
       console.error('Gemini API error:', errorData);
-      throw new Error(JSON.stringify(errorData));
+      throw new Error (JSON.stringify(errorData));
     }
 
     const data = await response.json();
@@ -66,9 +66,16 @@ export async function POST(req) {
     const generatedText = await generator.generateQuestions(prompt);
     const questions = generator.cleanQuestions(generatedText);
 
+    if (!questions || questions.length === 0) {
+      return Response.json({ message: 'No questions generated. Please try again with a different job title.' }, { status: 400 });
+    }
     return Response.json({ questions });
   } catch (error) {
     console.error('Error generating questions:', error);
+    //for api overload
+    if (error.message.includes('overload') || error.message.includes('quota exceeded') || error.message.includes('503')) {
+      return Response.json({ message: 'API is currently overloaded. Please try again later.', error: 'API_OVERLOAD' }, { status: 503 });
+    }
     return Response.json({ message: 'Error generating questions', details: error.toString() }, { status: 500 });
   }
 }
