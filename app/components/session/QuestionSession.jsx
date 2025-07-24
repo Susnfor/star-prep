@@ -55,81 +55,144 @@ export default function QuestionSession() {
 			sx={{
 				height: "100vh",
 				width: "100%",
-				bgcolor: "background.default",
+				bgcolor: "grey.50",
 				display: "flex",
 				justifyContent: "center",
 				alignItems: "center",
-				px: 2,
+				p: 2,
+				overflow: "hidden",
 			}}
 		>
 			<Paper
-				elevation={4}
+				elevation={8}
 				sx={{
-					p: 4,
 					width: "100%",
-					minHeight: 700,
-					mx: "auto",
-					textAlign: "center",
-					borderRadius: 3,
+					height: "95vh",
+					maxWidth: "1200px",
+					borderRadius: 4,
+					background: "linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)",
+					boxShadow: "0 20px 40px rgba(0,0,0,0.08)",
 					display: "flex",
+					flexDirection: "column",
+					overflow: "hidden",
 				}}
 			>
-				<Grid container spacing={2}>
-					<Grid size={12}>
-                        <TimerDisplay 
-                            isPrepTimeOver={controller.isPrepTimeOver}
-                            setupData={controller.setupData}
-                            isRecording={controller.isRecording}
-                            handlePrepTimeEnd={controller.handlePrepTimeEnd}
-                            handleRecordingTimeEnd={controller.handleRecordingTimeEnd}
-                            keyTimer={controller.keyTimer}
-                        />
-					</Grid>
-					<Grid size={6}>
-						<Box
-							sx={{
-								display: "flex",
-								flexDirection: "column",
-								alignItems: "center",
-								margin: "0 auto",
-							}}
-						>
-							<QuestionDisplay
-								setCurrentQuestionIndex={controller.setCurrentQuestionIndex}
-							/>
-							<Box mt={2}>
-                                {/*This component has the skips */}
-								<RecordingActions
-									isPrepTimeOver={controller.isPrepTimeOver}
-									isRecording={controller.isRecording}
-									handlePrepTimeEnd={controller.handlePrepTimeEnd}
-									handleRecordingTimeEnd={controller.handleRecordingTimeEnd}
-								/>
-							</Box>
-							<Box mt={2}>
-                                { /* This component has the next, retake and download buttons */}
-								<QuestionControls
-									onNext={controller.handleNextQuestion}
-									onRetake={controller.handleRetakeQuestion}
-									onDownload={controller.handleCurrentDownload}
-								/>
-							</Box>
-						</Box>
-					</Grid>
+				{/* Header with timer */}
+				<Box 
+					sx={{ 
+						px: 3,
+						py: 1.5,
+						borderBottom: "1px solid",
+						borderColor: "grey.200",
+						flexShrink: 0,
+						display: "flex",
+						justifyContent: "space-between",
+						alignItems: "center",
+					}}
+				>
+					{/* Left side - App title and progress */}
+					<Box>
+						<Typography variant="h5" component="h1" sx={{ fontWeight: 600, color: "primary.main", mb: 0.5 }}>
+							Star Prep
+						</Typography>
+						<Typography variant="body2" sx={{ color: "text.secondary" }}>
+							Question {controller.currentQuestionIndex + 1} of {controller.setupData?.numQuestions || 0} • {controller.setupData?.jobTitle || 'Interview Practice'}
+						</Typography>
+					</Box>
 
-					<Grid size={6}>
-                        {/* This component handles the video recording functionality */}
-						<VideoRecorderComponent
-							isRecording={controller.isRecording}
-							setIsRecording={controller.setIsRecording}
+					{/* Right side - Timer */}
+					<Box>
+						<TimerDisplay 
 							isPrepTimeOver={controller.isPrepTimeOver}
-							setIsPrepTimeOver={controller.setIsPrepTimeOver}
-							onRecorderReady={controller.handleRecorderReady}
-							recorderRef={controller.recorderRef}
+							setupData={controller.setupData}
+							isRecording={controller.isRecording}
+							handlePrepTimeEnd={controller.handlePrepTimeEnd}
+							handleRecordingTimeEnd={controller.handleRecordingTimeEnd}
+							keyTimer={controller.keyTimer}
 						/>
-						
+					</Box>
+				</Box>
+
+				{/* Main content grid */}
+				<Box sx={{ flex: 1, p: 2, overflow: "hidden" }}>
+					<Grid container spacing={2} sx={{ height: "100%" }}>
+						{/* Left column - Question and controls */}
+						<Grid size={6}>
+							<Paper
+								elevation={2}
+								sx={{
+									p: 3,
+									height: "100%",
+									borderRadius: 3,
+									bgcolor: "background.paper",
+									border: "1px solid",
+									borderColor: "grey.200",
+									display: "flex",
+									flexDirection: "column",
+									justifyContent: "space-between",
+								}}
+							>
+								{/* Question section */}
+								<Box sx={{ flex: 1, mb: 3, overflow: "auto" }}>
+									<QuestionDisplay
+										setCurrentQuestionIndex={controller.setCurrentQuestionIndex}
+									/>
+								</Box>
+
+								{/* Controls section */}
+								<Box 
+									sx={{ 
+										display: "flex", 
+										flexDirection: "column", 
+										gap: 2,
+										alignItems: "center",
+										flexShrink: 0,
+									}}
+								>
+									<RecordingActions
+										isPrepTimeOver={controller.isPrepTimeOver}
+										isRecording={controller.isRecording}
+										handlePrepTimeEnd={controller.handlePrepTimeEnd}
+										handleRecordingTimeEnd={controller.handleRecordingTimeEnd}
+									/>
+									
+									<QuestionControls
+										onNext={controller.handleNextQuestion}
+										onRetake={controller.handleRetakeQuestion}
+										onDownload={controller.handleCurrentDownload}
+									/>
+								</Box>
+							</Paper>
+						</Grid>
+
+						{/* Right column - Video recorder */}
+						<Grid size={6}>
+							<Paper
+								elevation={2}
+								sx={{
+									p: 3,
+									height: "100%",
+									borderRadius: 3,
+									bgcolor: "background.paper",
+									border: "1px solid",
+									borderColor: "grey.200",
+									display: "flex",
+									alignItems: "center",
+									justifyContent: "center",
+								}}
+							>
+								<VideoRecorderComponent
+									isRecording={controller.isRecording}
+									setIsRecording={controller.setIsRecording}
+									isPrepTimeOver={controller.isPrepTimeOver}
+									setIsPrepTimeOver={controller.setIsPrepTimeOver}
+									onRecorderReady={controller.handleRecorderReady}
+									recorderRef={controller.recorderRef}
+								/>
+							</Paper>
+						</Grid>
 					</Grid>
-				</Grid>
+				</Box>
 			</Paper>
 		</Box>
 	);
