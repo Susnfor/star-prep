@@ -1,3 +1,19 @@
+import { 
+    Box, 
+    Typography, 
+    Paper, 
+    Chip,
+    Grid,
+    Avatar
+} from '@mui/material';
+import { 
+    Feedback,
+    ThumbUp,
+    Star,
+    RecordVoiceOver,
+    TrendingUp
+} from '@mui/icons-material';
+
 const formatStarSuggestion = (starText) => {
     if (!starText) return starText;
     
@@ -17,15 +33,29 @@ export default function FeedbackDisplay({feedback}){
     // Check if feedback is available and has the right structure
     if (!feedback || !feedback.response) {
         return (
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-100 p-6 rounded-xl shadow-lg border border-blue-200">
-                <div className="text-center">
-                    <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span className="text-2xl">💭</span>
-                    </div>
-                    <h2 className="text-xl font-bold text-gray-800 mb-2">Interview Feedback</h2>
-                    <p className="text-gray-600">No feedback available yet.</p>
-                </div>
-            </div>
+            <Paper
+                elevation={2}
+                sx={{
+                    p: 4,
+                    borderRadius: 3,
+                    bgcolor: "background.paper",
+                    border: "1px solid",
+                    borderColor: "grey.200",
+                    textAlign: "center"
+                }}
+            >
+                <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
+                    <Avatar sx={{ bgcolor: "primary.main", width: 64, height: 64 }}>
+                        <Feedback sx={{ fontSize: 32 }} />
+                    </Avatar>
+                    <Typography variant="h6" sx={{ fontWeight: 600, color: "text.primary" }}>
+                        Interview Feedback
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                        No feedback available yet.
+                    </Typography>
+                </Box>
+            </Paper>
         );
     }
 
@@ -36,92 +66,206 @@ export default function FeedbackDisplay({feedback}){
     const isStringResponse = typeof response === 'string';
     
     return (
-        <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+        <Paper
+            elevation={2}
+            sx={{
+                borderRadius: 3,
+                bgcolor: "background.paper",
+                border: "1px solid",
+                borderColor: "grey.200",
+                overflow: "hidden"
+            }}
+        >
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 text-white">
-                <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
-                        <span className="text-xl">📝</span>
-                    </div>
-                    <div>
-                        <h2 className="text-xl font-bold">Interview Feedback</h2>
-                        <p className="text-blue-100 text-sm">AI-powered analysis of your response</p>
-                    </div>
-                </div>
-            </div>
+            <Box 
+                sx={{ 
+                    bgcolor: "primary.main",
+                    p: 3,
+                    color: "white"
+                }}
+            >
+                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                    <Avatar sx={{ bgcolor: "rgba(255,255,255,0.2)", width: 48, height: 48 }}>
+                        <Feedback sx={{ fontSize: 24 }} />
+                    </Avatar>
+                    <Box>
+                        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                            AI Feedback Analysis
+                        </Typography>
+                        <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                            Powered by intelligent response evaluation
+                        </Typography>
+                    </Box>
+                </Box>
+            </Box>
 
             {/* Content */}
-            <div className="p-6 space-y-6">
-
+            <Box sx={{ p: 3 }}>
                 {isStringResponse ? (
                     // Display raw string response
-                    <div className="bg-amber-50 p-4 rounded-lg border border-amber-200">
-                        <h3 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                            <span className="text-amber-600">💬</span>
-                            Feedback Analysis
-                        </h3>
-                        <div className="bg-white p-4 rounded-lg border shadow-sm">
-                            <pre className="whitespace-pre-wrap text-sm text-gray-700 leading-relaxed font-sans">
+                    <Paper
+                        variant="outlined"
+                        sx={{
+                            p: 3,
+                            bgcolor: "warning.50",
+                            borderColor: "warning.200",
+                            borderRadius: 2
+                        }}
+                    >
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
+                            <RecordVoiceOver sx={{ color: "warning.main" }} />
+                            <Typography variant="h6" sx={{ fontWeight: 600, color: "text.primary" }}>
+                                Feedback Analysis
+                            </Typography>
+                        </Box>
+                        <Paper
+                            variant="outlined"
+                            sx={{
+                                p: 3,
+                                bgcolor: "background.paper",
+                                borderRadius: 2
+                            }}
+                        >
+                            <Typography 
+                                variant="body1" 
+                                sx={{ 
+                                    whiteSpace: "pre-wrap",
+                                    lineHeight: 1.7,
+                                    color: "text.primary"
+                                }}
+                            >
                                 {response}
-                            </pre>
-                        </div>
-                    </div>
+                            </Typography>
+                        </Paper>
+                    </Paper>
                 ) : (
                     // Display parsed feedback object
-                    <div className="space-y-4">
+                    <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
                         {/* Overall Feedback */}
-                        <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                            <h3 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
-                                <span className="text-green-600">✨</span>
-                                Overall Feedback
-                            </h3>
-                            <p className="text-gray-700">{response.overallFeedback || 'N/A'}</p>
-                        </div>
+                        <Paper
+                            variant="outlined"
+                            sx={{
+                                p: 3,
+                                bgcolor: "success.50",
+                                borderColor: "success.200",
+                                borderRadius: 2
+                            }}
+                        >
+                            <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
+                                <Feedback sx={{ color: "success.main" }} />
+                                <Typography variant="h6" sx={{ fontWeight: 600, color: "text.primary" }}>
+                                    Overall Feedback
+                                </Typography>
+                            </Box>
+                            <Typography variant="body1" sx={{ color: "text.primary", lineHeight: 1.6 }}>
+                                {response.overallFeedback || 'N/A'}
+                            </Typography>
+                        </Paper>
 
                         {/* Positive Highlight */}
-                        <div className="bg-emerald-50 p-4 rounded-lg border border-emerald-200">
-                            <h3 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
-                                <span className="text-emerald-600">👍</span>
-                                What You Did Well
-                            </h3>
-                            <p className="text-gray-700">{response.positiveHighlight || 'N/A'}</p>
-                        </div>
+                        <Paper
+                            variant="outlined"
+                            sx={{
+                                p: 3,
+                                bgcolor: "info.50",
+                                borderColor: "info.200",
+                                borderRadius: 2
+                            }}
+                        >
+                            <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
+                                <ThumbUp sx={{ color: "info.main" }} />
+                                <Typography variant="h6" sx={{ fontWeight: 600, color: "text.primary" }}>
+                                    What You Did Well
+                                </Typography>
+                            </Box>
+                            <Typography variant="body1" sx={{ color: "text.primary", lineHeight: 1.6 }}>
+                                {response.positiveHighlight || 'N/A'}
+                            </Typography>
+                        </Paper>
 
                         {/* STAR Suggestion */}
-                        <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
-                            <h3 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
-                                <span className="text-purple-600">⭐</span>
-                                STAR Method Suggestion
-                            </h3>
-                            <p className="text-gray-700"   style={{ whiteSpace: 'pre-wrap', lineHeight: '1.6' }}>{formatStarSuggestion(response.starSuggestion) || 'No STAR suggestion available'}</p>
-                        </div>
+                        <Paper
+                            variant="outlined"
+                            sx={{
+                                p: 3,
+                                bgcolor: "secondary.50",
+                                borderColor: "secondary.200",
+                                borderRadius: 2
+                            }}
+                        >
+                            <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
+                                <Star sx={{ color: "secondary.main" }} />
+                                <Typography variant="h6" sx={{ fontWeight: 600, color: "text.primary" }}>
+                                    STAR Method Suggestion
+                                </Typography>
+                            </Box>
+                            <Typography 
+                                variant="body1" 
+                                sx={{ 
+                                    whiteSpace: "pre-wrap",
+                                    lineHeight: 1.7,
+                                    color: "text.primary"
+                                }}
+                            >
+                                {formatStarSuggestion(response.starSuggestion) || 'No STAR suggestion available'}
+                            </Typography>
+                        </Paper>
 
                         {/* Bottom Row - Metrics */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {/* Filler Words */}
-                            <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
-                                <h3 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
-                                    <span className="text-orange-600">🗣️</span>
-                                    Filler Words
-                                </h3>
-                                <p className="text-2xl font-bold text-orange-600">{response.fillerWords || 'N/A'}</p>
-                            </div>
+                        <Grid container spacing={2}>
+                            {/* Filler Words - Always on the left */}
+                            <Grid size={6}>
+                                <Paper
+                                    variant="outlined"
+                                    sx={{
+                                        p: 3,
+                                        bgcolor: "warning.50",
+                                        borderColor: "warning.200",
+                                        borderRadius: 2,
+                                        textAlign: "center",
+                                        height: "100%"
+                                    }}
+                                >
+                                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 1, mb: 1 }}>
+                                        <RecordVoiceOver sx={{ color: "warning.main" }} />
+                                        <Typography variant="h6" sx={{ fontWeight: 600, color: "text.primary" }}>
+                                            Filler Words
+                                        </Typography>
+                                    </Box>
+                                    <Typography variant="h5" sx={{ fontWeight: 700, color: "warning.main" }}>
+                                        {response.fillerWords || 'N/A'}
+                                    </Typography>
+                                </Paper>
+                            </Grid>
 
-                            {/* Score */}
-                            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                                <h3 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
-                                    <span className="text-blue-600">🎯</span>
-                                    Overall Score
-                                </h3>
-                                <div className="flex items-center gap-2">
-                                    <p className="text-2xl font-bold text-blue-600">{response.score || 'N/A'}</p>
-                                    {response.score && <span className="text-gray-500"></span>}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                            {/* Score - Always on the right */}
+                            <Grid size={6}>
+                                <Paper
+                                    variant="outlined"
+                                    sx={{
+                                        p: 3,
+                                        bgcolor: "primary.50",
+                                        borderColor: "primary.200",
+                                        borderRadius: 2,
+                                        textAlign: "center",
+                                        height: "100%"
+                                    }}
+                                >
+                                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 1, mb: 1 }}>
+                                        <TrendingUp sx={{ color: "primary.main" }} />
+                                        <Typography variant="h6" sx={{ fontWeight: 600, color: "text.primary" }}>
+                                            Overall Score
+                                        </Typography>
+                                    </Box>
+                                    <Typography variant="h4" sx={{ fontWeight: 700, color: "primary.main" }}>
+                                        {response.score || 'N/A'}
+                                    </Typography>
+                                </Paper>
+                            </Grid>
+                        </Grid>
+                    </Box>
                 )}
-            </div>
-        </div>
+            </Box>
+        </Paper>
     );
 }

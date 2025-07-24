@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
 import { useState } from "react";
 
 // This component will handle the feedback generation and display
@@ -68,19 +69,41 @@ export default function FeedbackComponent({ transcribedText, question }) {
 
 	// Render the feedback component
 	return (
-		<div>
+		<Box>
 			{loading ? (
-				<Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-					<CircularProgress />
-					<Typography variant="body2">Fetching feedback...</Typography>
-				</Box>
+				<Paper
+					variant="outlined"
+					sx={{
+						p: 3,
+						borderRadius: 2,
+						textAlign: "center",
+						bgcolor: "grey.50"
+					}}
+				>
+					<Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
+						<CircularProgress size={24} />
+						<Typography variant="body1" sx={{ color: "text.secondary" }}>
+							Analyzing your response...
+						</Typography>
+					</Box>
+				</Paper>
 			) : currentFeedback && currentFeedback.response ? (
 				<FeedbackDisplay feedback={currentFeedback} />
 			) : (
-				<Typography variant="body2" color="text.secondary">
-					No feedback available.
-				</Typography>
+				<Paper
+					variant="outlined"
+					sx={{
+						p: 4,
+						borderRadius: 2,
+						textAlign: "center",
+						bgcolor: "grey.50"
+					}}
+				>
+					<Typography variant="body1" color="text.secondary">
+						No feedback available for this response.
+					</Typography>
+				</Paper>
 			)}
-		</div>
+		</Box>
 	);
 }
