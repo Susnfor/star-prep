@@ -182,6 +182,7 @@ export default function QuestionSession() {
 								}}
 							>
 								<VideoRecorderComponent
+									key={controller.videoComponentKey}
 									isRecording={controller.isRecording}
 									setIsRecording={controller.setIsRecording}
 									isPrepTimeOver={controller.isPrepTimeOver}

@@ -11,6 +11,7 @@ export function useQuestionSessionController() {
     const recording = useRecording();
     const transcription = useTranscription();
     const [keyTimer, setKeyTimer] = useState(0);
+    const [videoComponentKey, setVideoComponentKey] = useState(0);
     const router = useRouter()
 
     const handleRecorderReady = (recorder) => {
@@ -107,7 +108,20 @@ export function useQuestionSessionController() {
 
     const handleRedoQuestions = () => {
         setCurrentQuestionIndex(0);
-        handlePrepStart();
+        
+        // Clean up the current recorder ref
+        if (recording.recorderRef.current) {
+            recording.stopWebcamFeed();
+            recording.recorderRef.current = null;
+        }
+        
+        // Force remount of VideoRecorderComponent by changing key
+        setVideoComponentKey(prev => prev + 1);
+        
+        // Start prep after a short delay to allow remounting
+        setTimeout(() => {
+            handlePrepStart();
+        }, 100);
     };
     useEffect(() => {
     if (!transcription.transcriberRef.current) {
@@ -145,6 +159,7 @@ export function useQuestionSessionController() {
         setupData,
         currentQuestionIndex,
         setCurrentQuestionIndex,
+        videoComponentKey,
         
         // Actions
         handleRecorderReady,
