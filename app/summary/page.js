@@ -25,7 +25,7 @@ export default function SummaryPage() {
 			rightText="Analysis"
 			rightColor="primary.main"
 		>
-			<Box sx={{ width: "100%", overflow: "auto", px: 1 }}>
+			<Box sx={{ width: "100%", height: "100%", overflow: "auto", px: 1 }}>
 				{/* Summary intro */}
 				<Paper
 					elevation={2}
