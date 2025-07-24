@@ -20,6 +20,7 @@ export default function VideoRecorderComponent({recorderRef, isRecording, isPrep
 
   return (
     <Box>
+      <Box sx={{ minHeight: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1 }}>
       {isRecording && (
       <Typography variant="body2" color="error" sx={{ mt: 1 }}>
         🔴 REC
@@ -30,12 +31,21 @@ export default function VideoRecorderComponent({recorderRef, isRecording, isPrep
         📹 PREP
       </Typography>
     )}
+    </Box>
       <video
       ref={videoRef}
       autoPlay
       muted
-      playsInline
-      className="w-full h-auto max-w-3xl bg-black rounded"
+      // playsInline
+        style={{
+        width: '100%',
+        maxWidth: '700px',
+        height: '500px', 
+        objectFit: 'cover',
+        borderRadius: '12px',
+        border: isRecording ? '3px solid #f44336' : '2px solid #ddd',
+        backgroundColor: '#000' // Black background when loading
+    }}
     />
   </Box>
 

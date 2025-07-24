@@ -53,7 +53,7 @@ export default function QuestionSession() {
 	return (
 		<Box
 			sx={{
-				minHeight: "100vh",
+				height: "100vh",
 				width: "100%",
 				bgcolor: "background.default",
 				display: "flex",
@@ -127,21 +127,6 @@ export default function QuestionSession() {
 							onRecorderReady={controller.handleRecorderReady}
 							recorderRef={controller.recorderRef}
 						/>
-						{controller.isRecording && (
-							<Box>
-								<Paper sx={{ p: 2, mt: 2, backgroundColor: '#f5f5f5' }}>
-									<Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-										Live Transcript:
-									</Typography>
-									<Typography variant="body2" sx={{ minHeight: '40px', textAlign: 'left' }}>
-										{controller.recordedTranscript[controller.setupData?.questions?.[controller.currentQuestionIndex]] || 'Speak to see transcript...'}
-									</Typography>
-									<Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-										Debug: Q{controller.currentQuestionIndex}: {controller.setupData?.questions?.[controller.currentQuestionIndex]?.substring(0, 30)}...
-									</Typography>
-								</Paper>
-							</Box>
-						)}
 						
 					</Grid>
 				</Grid>

@@ -12,8 +12,9 @@ export default function QuestionDisplay() {
     return (
         <Box sx={{
             p: 4,
-            width: "100%",
+            minWidth: 300, 
             maxWidth: 600,
+            overflow: 'auto', 
             mx: "auto",
             textAlign: "center",
             borderRadius: 3,

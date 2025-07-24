@@ -10,7 +10,7 @@ export default function TimerDisplay({
 	keyTimer,
 }) {
 	return (
-		<Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+		<Box sx={{minHeight: 80, minWidth: 200, display: "flex", justifyContent: "flex-end" }}>
 			{!isPrepTimeOver && (
 				<CountDownComponent
 					key={`prep-${keyTimer}`}
